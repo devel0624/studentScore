@@ -1,6 +1,5 @@
 package com.nhnacademy.springmvc.repository;
 
-import com.nhnacademy.springmvc.domain.Post;
 import com.nhnacademy.springmvc.domain.Student;
 
 import java.util.Comparator;

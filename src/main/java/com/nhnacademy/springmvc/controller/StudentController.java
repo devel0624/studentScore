@@ -2,12 +2,10 @@ package com.nhnacademy.springmvc.controller;
 
 import com.nhnacademy.springmvc.domain.Student;
 import com.nhnacademy.springmvc.domain.StudentRegisterRequest;
-import com.nhnacademy.springmvc.domain.User;
 import com.nhnacademy.springmvc.repository.StudentRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.MissingPathVariableException;
 import org.springframework.web.bind.annotation.*;
 
 @Slf4j
@@ -43,9 +41,8 @@ public class StudentController {
 
     @PostMapping("/{studentId}/modify")
     public String modifyUser(@ModelAttribute StudentRegisterRequest request,
+                             @ModelAttribute Student student,
                              Model model) {
-
-        Student student = (Student) model.getAttribute("student");
 
         student.setEmail(request.getEmail());
         student.setScore(request.getScore());
