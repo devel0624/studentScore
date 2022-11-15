@@ -1,6 +1,7 @@
 package com.nhnacademy.springmvc.controller;
 
 import com.nhnacademy.springmvc.domain.Student;
+import com.nhnacademy.springmvc.domain.StudentModifyRequest;
 import com.nhnacademy.springmvc.domain.StudentRegisterRequest;
 import com.nhnacademy.springmvc.repository.StudentRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +21,11 @@ public class StudentController {
 
     @ModelAttribute("student")
     public Student getStudent(@PathVariable("studentId") long studentId){
+
+        if (!studentRepository.exists(studentId)) {
+            throw new StudentNotFoundException();
+        }
+        
         return studentRepository.getStudent(studentId);
     }
 
@@ -40,7 +46,7 @@ public class StudentController {
     }
 
     @PostMapping("/{studentId}/modify")
-    public String modifyUser(@ModelAttribute StudentRegisterRequest request,
+    public String modifyUser(@ModelAttribute StudentModifyRequest request,
                              @ModelAttribute Student student,
                              Model model) {
 
