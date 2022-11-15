@@ -1,8 +1,12 @@
 package com.nhnacademy.springmvc.controller;
 
+import com.nhnacademy.springmvc.domain.Student;
+import com.nhnacademy.springmvc.domain.StudentRegisterRequest;
 import com.nhnacademy.springmvc.repository.StudentRepository;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
@@ -18,12 +22,23 @@ public class StudentRegisterController {
 
     @GetMapping
     public String studentRegisterForm() {
-        return "studentRegister";
+        return "student/register";
     }
 
     @PostMapping
-    public ModelAndView registerStudent() {
-        return null;
+    public ModelAndView registerStudent(@ModelAttribute StudentRegisterRequest request){
+
+        Student student = studentRepository.register(
+                request.getName(),
+                request.getEmail(),
+                request.getScore(),
+                request.getComment()
+        );
+
+        ModelAndView mav = new ModelAndView("student/view");
+        mav.addObject("student",student);
+        return mav;
     }
+
 
 }

@@ -1,11 +1,16 @@
 package com.nhnacademy.springmvc.controller;
 
+import com.nhnacademy.springmvc.domain.Student;
+import com.nhnacademy.springmvc.domain.StudentRegisterRequest;
+import com.nhnacademy.springmvc.domain.User;
 import com.nhnacademy.springmvc.repository.StudentRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.MissingPathVariableException;
+import org.springframework.web.bind.annotation.*;
 
+@Slf4j
 @Controller
 @RequestMapping("/student")
 public class StudentController {
@@ -15,19 +20,42 @@ public class StudentController {
         this.studentRepository = studentRepository;
     }
 
-    @GetMapping("/{studentId}")
-    public String viewStudent() {
-        return "studentView";
+    @ModelAttribute("student")
+    public Student getStudent(@PathVariable("studentId") long studentId){
+        return studentRepository.getStudent(studentId);
     }
+
+    @GetMapping("/{studentId}")
+    public String viewStudent(@RequestParam(name = "hidescore", defaultValue = "no") String hideScore,
+                              @ModelAttribute Student student,
+                              Model model) {
+        if(hideScore.equalsIgnoreCase("yes")){
+            model.addAttribute("student",Student.maskScoreAndComment(student));
+        }
+        return "/student/view";
+    }
+
 
     @GetMapping("/{studentId}/modify")
     public String studentModifyForm() {
-        return "studentModify";
+        return "/student/modify";
     }
 
     @PostMapping("/{studentId}/modify")
-    public String modifyUser() {
-        return "studentView";
+    public String modifyUser(@ModelAttribute StudentRegisterRequest request,
+                             Model model) {
+
+        Student student = (Student) model.getAttribute("student");
+
+        student.setEmail(request.getEmail());
+        student.setScore(request.getScore());
+        student.setComment(request.getComment());
+
+        studentRepository.modify(student);
+
+        model.addAttribute(student);
+
+        return "/student/view";
     }
 
 }
