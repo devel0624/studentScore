@@ -12,7 +12,6 @@ import org.springframework.stereotype.Controller;
 @ComponentScan(basePackageClasses = Base.class,
     excludeFilters = { @ComponentScan.Filter(Controller.class)})
 public class RootConfig {
-
     @Bean
     public StudentRepository studentRepository() {
         StudentRepository studentRepository = new StudentRepositoryImpl();

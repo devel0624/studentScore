@@ -2,12 +2,17 @@ package com.nhnacademy.springmvc.controller;
 
 import com.nhnacademy.springmvc.domain.Student;
 import com.nhnacademy.springmvc.domain.StudentModifyRequest;
-import com.nhnacademy.springmvc.domain.StudentRegisterRequest;
+import com.nhnacademy.springmvc.exception.StudentNotFoundException;
 import com.nhnacademy.springmvc.repository.StudentRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
+
+import javax.validation.Valid;
 
 @Slf4j
 @Controller
@@ -19,46 +24,89 @@ public class StudentController {
         this.studentRepository = studentRepository;
     }
 
-    @ModelAttribute("student")
-    public Student getStudent(@PathVariable("studentId") long studentId){
+    @ModelAttribute("maskedStudent")
+    public Student getMaskedStudent(){
+        return Student.maskScoreAndComment();
+    }
 
-        if (!studentRepository.exists(studentId)) {
+    public void existStudent(long studentId){
+        if (!studentRepository.exists(studentId)){
             throw new StudentNotFoundException();
         }
-        
-        return studentRepository.getStudent(studentId);
+    }
+
+    @GetMapping
+    public String studentIndex(){
+        return "/student/index";
     }
 
     @GetMapping("/{studentId}")
-    public String viewStudent(@RequestParam(name = "hidescore", defaultValue = "no") String hideScore,
-                              @ModelAttribute Student student,
-                              Model model) {
-        if(hideScore.equalsIgnoreCase("yes")){
-            model.addAttribute("student",Student.maskScoreAndComment(student));
+    public String viewStudent(@PathVariable("studentId") long studentId,
+                              @RequestParam(name = "hideScore", defaultValue = "no") String upperCase,
+                              @RequestParam(name = "hidescore", defaultValue = "no") String lowerCase,
+                              ModelMap map){
+
+        existStudent(studentId);
+
+        if (upperCase.equalsIgnoreCase("yes")||lowerCase.equalsIgnoreCase("yes")){
+            String redirectUrl = "redirect:/student/" + studentId + "/hideScore";
+            return redirectUrl;
         }
+
+        Student student = studentRepository.getStudent(studentId);
+
+        map.addAttribute("student",student);
+
+        return "/student/view";
+    }
+
+    @GetMapping("/{studentId}/hideScore")
+    public String hideScoreAndComment(@PathVariable("studentId") long studentId,
+                                      @ModelAttribute("maskedStudent") Student maskedStudent,
+                                      ModelMap map){
+
+        existStudent(studentId);
+
+        Student student = studentRepository.getStudent(studentId);
+
+        maskedStudent.setName(student.getName());
+        maskedStudent.setEmail(student.getEmail());
+
+        map.addAttribute("student",maskedStudent);
+
         return "/student/view";
     }
 
 
     @GetMapping("/{studentId}/modify")
-    public String studentModifyForm() {
+    public String studentModifyForm(@PathVariable("studentId") long studentId,
+                                    Model model) {
+        existStudent(studentId);
+
+        Student student = studentRepository.getStudent(studentId);
+
+        model.addAttribute("student",student);
+
         return "/student/modify";
     }
 
     @PostMapping("/{studentId}/modify")
-    public String modifyUser(@ModelAttribute StudentModifyRequest request,
-                             @ModelAttribute Student student,
-                             Model model) {
+    public ModelAndView modifyStudent(@PathVariable("studentId") long studentId,
+                                      @Valid @ModelAttribute StudentModifyRequest request) {
 
-        student.setEmail(request.getEmail());
-        student.setScore(request.getScore());
-        student.setComment(request.getComment());
+        Student student = studentRepository.modify(studentId,request);
 
-        studentRepository.modify(student);
+        ModelAndView mav = new ModelAndView("/student/view");
 
-        model.addAttribute(student);
+        mav.addObject("student",student);
 
-        return "/student/view";
+        return mav;
+    }
+
+    @ExceptionHandler(StudentNotFoundException.class)
+    @ResponseStatus(code = HttpStatus.NOT_FOUND, reason = "Student Data Not Found")
+    public void notFound() {
+        // TODO document why this method is empty
     }
 
 }

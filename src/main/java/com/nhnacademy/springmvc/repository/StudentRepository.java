@@ -1,6 +1,7 @@
 package com.nhnacademy.springmvc.repository;
 
 import com.nhnacademy.springmvc.domain.Student;
+import com.nhnacademy.springmvc.domain.StudentModifyRequest;
 
 public interface StudentRepository {
     boolean exists(long id);
@@ -9,5 +10,5 @@ public interface StudentRepository {
 
     Student getStudent(long id);
 
-    void modify(Student student);
+    Student modify(long studentId, StudentModifyRequest request);
 }

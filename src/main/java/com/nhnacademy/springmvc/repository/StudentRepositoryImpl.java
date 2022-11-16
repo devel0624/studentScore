@@ -1,6 +1,7 @@
 package com.nhnacademy.springmvc.repository;
 
 import com.nhnacademy.springmvc.domain.Student;
+import com.nhnacademy.springmvc.domain.StudentModifyRequest;
 
 import java.util.Comparator;
 import java.util.HashMap;
@@ -32,16 +33,19 @@ public class StudentRepositoryImpl implements StudentRepository {
     }
 
     @Override
-    public void modify(Student student) {
-        Student editStudent = getStudent(student.getId());
-
-        editStudent.setEmail(student.getEmail());
-        editStudent.setScore(student.getScore());
-        editStudent.setComment(student.getComment());
+    public Student getStudent(long id) {
+        return students.get(id);
     }
 
     @Override
-    public Student getStudent(long id) {
-        return students.get(id);
+    public Student modify(long studentId, StudentModifyRequest request) {
+        Student editStudent = getStudent(studentId);
+
+        editStudent.setName(request.getName());
+        editStudent.setEmail(request.getEmail());
+        editStudent.setScore(request.getScore());
+        editStudent.setComment(request.getComment());
+
+        return editStudent;
     }
 }

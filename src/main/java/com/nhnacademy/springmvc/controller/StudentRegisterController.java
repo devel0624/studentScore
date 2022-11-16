@@ -5,7 +5,6 @@ import com.nhnacademy.springmvc.domain.StudentRegisterRequest;
 import com.nhnacademy.springmvc.exception.ValidationFailedException;
 import com.nhnacademy.springmvc.repository.StudentRepository;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -46,6 +45,7 @@ public class StudentRegisterController {
 
         ModelAndView mav = new ModelAndView("student/view");
         mav.addObject("student",student);
+
         return mav;
     }
 

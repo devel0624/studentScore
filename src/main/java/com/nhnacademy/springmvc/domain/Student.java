@@ -7,6 +7,7 @@ public class Student {
 
     @Getter
     private long id;
+    @Setter
     @Getter
     private String name;
     @Getter
@@ -33,13 +34,7 @@ public class Student {
 
     private static String COMMENT_MASK = "*****";
     private static int SCORE_MASK = 0;
-    public static Student maskScoreAndComment(Student student) {
-        return new Student(
-                student.getId(),
-                student.getName(),
-                student.getEmail(),
-                SCORE_MASK,
-                COMMENT_MASK
-        );
+    public static Student maskScoreAndComment() {
+        return new Student(0,"김아무개","aaa@aaa.com", SCORE_MASK, COMMENT_MASK);
     }
 }

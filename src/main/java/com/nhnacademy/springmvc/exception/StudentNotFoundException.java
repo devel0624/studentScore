@@ -1,5 +1,4 @@
-package com.nhnacademy.springmvc.controller;
+package com.nhnacademy.springmvc.exception;
 
 public class StudentNotFoundException extends RuntimeException {
-
 }

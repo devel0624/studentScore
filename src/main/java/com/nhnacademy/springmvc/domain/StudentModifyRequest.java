@@ -11,6 +11,11 @@ import javax.validation.constraints.NotBlank;
 
 @Value
 public class StudentModifyRequest {
+
+    @NonNull
+    @NotBlank
+    String name;
+
     @Email
     String email;
 
