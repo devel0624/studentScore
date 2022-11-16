@@ -49,8 +49,7 @@ public class StudentController {
         existStudent(studentId);
 
         if (upperCase.equalsIgnoreCase("yes")||lowerCase.equalsIgnoreCase("yes")){
-            String redirectUrl = "redirect:/student/" + studentId + "/hideScore";
-            return redirectUrl;
+            return "redirect:/student/" + studentId + "/hideScore";
         }
 
         Student student = studentRepository.getStudent(studentId);
