@@ -18,7 +18,7 @@ public class WebControllerAdvice {
     public String handleException(Exception ex, Model model) {
         log.error("", ex);
         model.addAttribute("exception", ex);
-        return "error";
+        return "thymeleaf/error";
     }
 
 }

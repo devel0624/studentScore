@@ -38,28 +38,27 @@ public class StudentController {
 
     @GetMapping
     public String studentIndex(){
-        return "redirect:/thymeleaf/index";
+        return "thymeleaf/index";
     }
 
     @GetMapping("/{studentId}")
     public ModelAndView viewStudent(@PathVariable("studentId") long studentId,
                                     @RequestParam(name = "hideScore", defaultValue = "no") String upperCase,
                                     @RequestParam(name = "hidescore", defaultValue = "no") String lowerCase,
-                                    RedirectAttributes redirectAttributes){
+                                    ModelAndView modelAndView){
         log.info("Student View");
 
         existStudent(studentId);
 
-        ModelAndView modelAndView = new ModelAndView();
-
         if (upperCase.equalsIgnoreCase("yes")||lowerCase.equalsIgnoreCase("yes")){
             modelAndView.setViewName("redirect:/student/" + studentId + "/hideScore");
         }else {
-            modelAndView.setViewName("redirect:/thymeleaf/view");
+            modelAndView.setViewName("thymeleaf/view");
         }
 
         Student student = studentRepository.getStudent(studentId);
-        redirectAttributes.addFlashAttribute("student",student);
+
+        modelAndView.addObject("student",student);
 
         return modelAndView;
     }
@@ -73,6 +72,7 @@ public class StudentController {
 
         Student student = studentRepository.getStudent(studentId);
 
+        maskedStudent.setId(student.getId());
         maskedStudent.setName(student.getName());
         maskedStudent.setEmail(student.getEmail());
 

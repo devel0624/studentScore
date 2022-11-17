@@ -10,17 +10,18 @@ import org.springframework.context.MessageSourceAware;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.multipart.MultipartResolver;
-import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.LocaleResolver;
-import org.springframework.web.servlet.config.annotation.*;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.ViewResolverRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 import org.thymeleaf.spring5.SpringTemplateEngine;
 import org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver;
 import org.thymeleaf.spring5.view.ThymeleafViewResolver;
 
-import java.util.Arrays;
+import java.util.List;
 
 @EnableWebMvc
 @Configuration
@@ -28,8 +29,7 @@ import java.util.Arrays;
 public class WebConfig implements WebMvcConfigurer, ApplicationContextAware, MessageSourceAware {
     private ApplicationContext applicationContext;
     private MessageSource messageSource;
-
-    // TODO #3: ApplicationContextAware, MessageSourceAware 인터페이스 구현 처리
+    
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         this.applicationContext = applicationContext;
@@ -43,7 +43,6 @@ public class WebConfig implements WebMvcConfigurer, ApplicationContextAware, Mes
     @Override
     public void configureViewResolvers(ViewResolverRegistry registry) {
         registry.jsp("/WEB-INF/view/", ".jsp");
-        // TODO #5: ThymeleafViewResolver 등록
         registry.viewResolver(thymeleafViewResolver());
     }
 
@@ -58,10 +57,8 @@ public class WebConfig implements WebMvcConfigurer, ApplicationContextAware, Mes
         registry.addInterceptor(new LoginCheckInterceptor())
                 .order(1)
                 .addPathPatterns("/**")
-                .excludePathPatterns(Arrays.asList("/","/login"));
+                .excludePathPatterns(List.of("/login","/students/*"));
     }
-
-    // TODO #4: ThymeleafViewResolver 설정
     @Bean
     public ThymeleafViewResolver thymeleafViewResolver() {
         ThymeleafViewResolver viewResolver = new ThymeleafViewResolver();

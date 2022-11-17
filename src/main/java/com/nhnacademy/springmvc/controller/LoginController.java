@@ -16,6 +16,11 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Controller
@@ -57,7 +62,7 @@ public class LoginController {
                 message = "Welcome, " + user.getId();
                 modelAndView.setViewName("redirect:/student");
             }else {
-                message = "잘못된 이메일 주소 입니다.";
+                message = "잘못된 비밀번호 입니다.";
             }
         }else{
             message = "존재하지 않는 아이디입니다.";
@@ -69,8 +74,14 @@ public class LoginController {
     }
 
     @GetMapping("/logout")
-    public String logout(){
-        return "thymeleaf/index";
+    public String logout(HttpServletRequest request,
+                         HttpServletResponse response){
+        Cookie cookie = Arrays.stream(request.getCookies()).filter(x -> x.getName().equals("SESSION")).collect(Collectors.toList()).get(0);
+
+        cookie.setMaxAge(0);
+        response.addCookie(cookie);
+
+        return "redirect:/login";
     }
 
 }

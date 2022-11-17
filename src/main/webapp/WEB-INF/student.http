@@ -1,0 +1,9 @@
+POST http://localhost:8080/students/ HTTP/1.1
+Content-type: application/json
+
+{
+  "name": "김아무개",
+  "email": "kimSomeThing@aaa.com",
+  "score": 87,
+  "comment": "특이사항"
+}

@@ -9,8 +9,7 @@
 <span> "http://localhost:8080/student/ 번호" 형식으로 입력 </span> <br/>
 <span> 1번은 존재하니, 이후 등록되는 학생은 2번부터 입니다. </span> <br/>
 <a th:href="@{/student/register}"> <span th:text="#{registerStudent}"></span> </a> </br>
-<a th:href="${#locale.toString() != 'ko'} ? '?locale=ko':'?locale=en' "> <span th:text="#{locale}"></span> </a>
-
-
+<a href="/logout"> <span th:text="#{logout}"></span> </a> <br/>
+<a th:href="${#locale.toString() != 'ko'} ? '?locale=ko':'?locale=en' "> <span th:text="#{locale}"></span> </a> <br/>
 </body>
 </html>

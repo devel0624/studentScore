@@ -9,10 +9,11 @@
     <span th:text="#{name}"></span> : <input type="text" name="name" th:value="${student.name}"/> <br />
     <span th:text="#{email}"></span> : <input type="text" name="email" th:value="${student.email}" /><br />
     <span th:text="#{score}"></span> : <input type="text" name="score" th:value="${student.score}" /><br />
-    <span th:text="#{comment}"><br/>
-    </span> : <textarea name="comment" rows="10" cols="80" th:value="${student.comment}"></textarea><br />
+    <span th:text="#{comment}"></span>
     <br />
-    <input type="submit"/>
+    <textarea name="comment" rows="10" cols="80" th:text="${student.comment}"></textarea><br />
+    <input type="submit"/><br/>
+    <a href="/"> <span th:text="#{indexTitle}"></span> </a>
 </form>
 </body>
 </html>

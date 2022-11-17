@@ -10,14 +10,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.servlet.FlashMap;
-import org.springframework.web.servlet.FlashMapManager;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.springframework.web.servlet.support.RequestContextUtils;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 @Controller
@@ -31,12 +25,11 @@ public class StudentRegisterController {
 
     @GetMapping
     public String studentRegisterForm() {
-        return "redirect:/thymeleaf/register";
+        return "thymeleaf/register";
     }
 
     @PostMapping
     public ModelAndView registerStudent(@Valid @ModelAttribute StudentRegisterRequest registerRequest,
-                                        RedirectAttributes redirectAttributes,
                                         BindingResult bindingResult){
 
         if(bindingResult.hasErrors()){
@@ -50,9 +43,11 @@ public class StudentRegisterController {
                 registerRequest.getComment()
         );
 
-        redirectAttributes.addFlashAttribute("student",student);
+        ModelAndView mav = new ModelAndView("thymeleaf/view");
 
-        return new ModelAndView("redirect:/thymeleaf/view");
+        mav.addObject("student",student);
+
+        return mav;
     }
 
 
