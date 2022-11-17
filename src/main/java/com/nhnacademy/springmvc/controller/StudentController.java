@@ -11,6 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 
@@ -37,26 +38,30 @@ public class StudentController {
 
     @GetMapping
     public String studentIndex(){
-        return "index.html";
+        return "redirect:/thymeleaf/index";
     }
 
     @GetMapping("/{studentId}")
-    public String viewStudent(@PathVariable("studentId") long studentId,
-                              @RequestParam(name = "hideScore", defaultValue = "no") String upperCase,
-                              @RequestParam(name = "hidescore", defaultValue = "no") String lowerCase,
-                              ModelMap map){
+    public ModelAndView viewStudent(@PathVariable("studentId") long studentId,
+                                    @RequestParam(name = "hideScore", defaultValue = "no") String upperCase,
+                                    @RequestParam(name = "hidescore", defaultValue = "no") String lowerCase,
+                                    RedirectAttributes redirectAttributes){
+        log.info("Student View");
 
         existStudent(studentId);
 
+        ModelAndView modelAndView = new ModelAndView();
+
         if (upperCase.equalsIgnoreCase("yes")||lowerCase.equalsIgnoreCase("yes")){
-            return "redirect:/student/" + studentId + "/hideScore";
+            modelAndView.setViewName("redirect:/student/" + studentId + "/hideScore");
+        }else {
+            modelAndView.setViewName("redirect:/thymeleaf/view");
         }
 
         Student student = studentRepository.getStudent(studentId);
+        redirectAttributes.addFlashAttribute("student",student);
 
-        map.addAttribute("student",student);
-
-        return "/student/view";
+        return modelAndView;
     }
 
     @GetMapping("/{studentId}/hideScore")
@@ -73,7 +78,7 @@ public class StudentController {
 
         map.addAttribute("student",maskedStudent);
 
-        return "/student/view";
+        return "thymeleaf/view";
     }
 
 
@@ -86,7 +91,7 @@ public class StudentController {
 
         model.addAttribute("student",student);
 
-        return "modify.html";
+        return "thymeleaf/modify";
     }
 
     @PostMapping("/{studentId}/modify")
@@ -95,7 +100,7 @@ public class StudentController {
 
         Student student = studentRepository.modify(studentId,request);
 
-        ModelAndView mav = new ModelAndView("view.html");
+        ModelAndView mav = new ModelAndView("thymeleaf/view");
 
         mav.addObject("student",student);
 

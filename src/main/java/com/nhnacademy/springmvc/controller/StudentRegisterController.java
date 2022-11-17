@@ -10,8 +10,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.FlashMap;
+import org.springframework.web.servlet.FlashMapManager;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.support.RequestContextUtils;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 @Controller
@@ -25,11 +31,12 @@ public class StudentRegisterController {
 
     @GetMapping
     public String studentRegisterForm() {
-        return "register.html";
+        return "redirect:/thymeleaf/register";
     }
 
     @PostMapping
-    public ModelAndView registerStudent(@Valid @ModelAttribute StudentRegisterRequest request,
+    public ModelAndView registerStudent(@Valid @ModelAttribute StudentRegisterRequest registerRequest,
+                                        RedirectAttributes redirectAttributes,
                                         BindingResult bindingResult){
 
         if(bindingResult.hasErrors()){
@@ -37,16 +44,15 @@ public class StudentRegisterController {
         }
 
         Student student = studentRepository.register(
-                request.getName(),
-                request.getEmail(),
-                request.getScore(),
-                request.getComment()
+                registerRequest.getName(),
+                registerRequest.getEmail(),
+                registerRequest.getScore(),
+                registerRequest.getComment()
         );
 
-        ModelAndView mav = new ModelAndView("view.html");
-        mav.addObject("student",student);
+        redirectAttributes.addFlashAttribute("student",student);
 
-        return mav;
+        return new ModelAndView("redirect:/thymeleaf/view");
     }
 
 
