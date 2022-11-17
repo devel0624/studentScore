@@ -37,7 +37,7 @@ public class StudentController {
 
     @GetMapping
     public String studentIndex(){
-        return "/student/index";
+        return "index.html";
     }
 
     @GetMapping("/{studentId}")
@@ -86,7 +86,7 @@ public class StudentController {
 
         model.addAttribute("student",student);
 
-        return "/student/modify";
+        return "modify.html";
     }
 
     @PostMapping("/{studentId}/modify")
@@ -95,7 +95,7 @@ public class StudentController {
 
         Student student = studentRepository.modify(studentId,request);
 
-        ModelAndView mav = new ModelAndView("/student/view");
+        ModelAndView mav = new ModelAndView("view.html");
 
         mav.addObject("student",student);
 

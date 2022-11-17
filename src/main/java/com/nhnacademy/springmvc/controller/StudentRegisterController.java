@@ -25,7 +25,7 @@ public class StudentRegisterController {
 
     @GetMapping
     public String studentRegisterForm() {
-        return "student/register";
+        return "register.html";
     }
 
     @PostMapping
@@ -43,7 +43,7 @@ public class StudentRegisterController {
                 request.getComment()
         );
 
-        ModelAndView mav = new ModelAndView("student/view");
+        ModelAndView mav = new ModelAndView("view.html");
         mav.addObject("student",student);
 
         return mav;
