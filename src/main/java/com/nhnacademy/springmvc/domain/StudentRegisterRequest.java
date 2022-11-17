@@ -9,7 +9,6 @@ import javax.validation.constraints.*;
 @Value
 public class StudentRegisterRequest {
 
-    @NonNull
     @NotBlank
     String name;
 
