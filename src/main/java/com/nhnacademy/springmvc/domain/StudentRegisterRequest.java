@@ -1,12 +1,13 @@
 package com.nhnacademy.springmvc.domain;
 
-import lombok.NonNull;
-import lombok.Value;
+import lombok.*;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.*;
 
-@Value
+@Setter
+@Getter
+@NoArgsConstructor
 public class StudentRegisterRequest {
 
     @NotBlank

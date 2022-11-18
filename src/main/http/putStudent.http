@@ -1,0 +1,9 @@
+PUT http://localhost:8080/students/1 HTTP/1.1
+Content-type: application/json
+
+{
+  "name": "김수정",
+  "email": "Kim@modify.com",
+  "score": 87,
+  "comment": "수정됨"
+}
