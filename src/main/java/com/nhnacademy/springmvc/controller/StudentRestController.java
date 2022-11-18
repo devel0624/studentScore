@@ -39,14 +39,14 @@ public class StudentRestController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<Student> add(@Valid  @RequestBody StudentRegisterRequest request,
+    public ResponseEntity<Student> postStudent(@Valid  @RequestBody StudentRegisterRequest request,
                                       BindingResult bindingResult) {
-
-        log.info(request.getName());
 
         if(bindingResult.hasErrors()){
             throw new ValidationFailedException(bindingResult);
         }
+
+        log.info(request.getName());
 
         Student student = studentRepository.register(request.getName(), request.getEmail(), request.getScore(), request.getComment());
 
@@ -54,12 +54,17 @@ public class StudentRestController {
     }
 
     @PutMapping("/{studentId}")
-    public ResponseEntity<Student> modify(@PathVariable("studentId") long id,
-                                          @Valid @RequestBody StudentModifyRequest request) {
+    public ResponseEntity<Student> putStudent(@PathVariable("studentId") long id,
+                                              @Valid @RequestBody StudentModifyRequest request,
+                                              BindingResult bindingResult) {
 
+        if(bindingResult.hasErrors()){
+            throw new ValidationFailedException(bindingResult);
+        }
         if (!studentRepository.exists(id)){
             throw new StudentNotFoundException();
         }
+
 
         Student student = studentRepository.modify(id,request);
 
