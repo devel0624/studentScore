@@ -1,5 +1,6 @@
 PUT http://localhost:8080/students/1 HTTP/1.1
 Content-type: application/json
+Accept: application/xml
 
 {
   "name": "김수정",
@@ -7,3 +8,7 @@ Content-type: application/json
   "score": 87,
   "comment": "수정됨"
 }
+
+<name>
+"김수정
+</name>

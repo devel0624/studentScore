@@ -16,7 +16,8 @@ import javax.validation.Valid;
 
 @Slf4j
 @RestController
-@RequestMapping("/students")
+@RequestMapping( value = "/students"
+)
 public class StudentRestController {
 
     private final StudentRepository studentRepository;
@@ -24,9 +25,8 @@ public class StudentRestController {
     public StudentRestController(StudentRepository studentRepository) {
         this.studentRepository = studentRepository;
     }
-
     @GetMapping("/{studentId}")
-    public ResponseEntity<Student> getStudent(@PathVariable("studentId") long id){
+    public Student getStudent(@PathVariable("studentId") long id){
 
         if (!studentRepository.exists(id)){
             throw new StudentNotFoundException();
@@ -34,7 +34,7 @@ public class StudentRestController {
 
         Student student = studentRepository.getStudent(id);
 
-        return new ResponseEntity<>(student,HttpStatus.FOUND);
+        return student;
     }
 
     @PostMapping
@@ -54,7 +54,7 @@ public class StudentRestController {
     }
 
     @PutMapping("/{studentId}")
-    public ResponseEntity<Student> putStudent(@PathVariable("studentId") long id,
+    public Student putStudent(@PathVariable("studentId") long id,
                                               @Valid @RequestBody StudentModifyRequest request,
                                               BindingResult bindingResult) {
 
@@ -68,6 +68,6 @@ public class StudentRestController {
 
         Student student = studentRepository.modify(id,request);
 
-        return new ResponseEntity<>(student, HttpStatus.ACCEPTED);
+        return student;
     }
 }
